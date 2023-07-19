@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import com.github.mikephil.charting.charts.BarChart
@@ -134,19 +135,26 @@ class BarChartIndividuals @JvmOverloads constructor(
         )
     }
 
-    inner class BarChartIndvMarker(context: Context, private val data: BarData) : DottedLineMarkerView(context) {
+    inner class BarChartIndvMarker(
+        context: Context,
+        private val data: BarData
+    ) : DottedLineMarkerView(context) {
 
         init {
             setChartView(chart = barChart)
+            setMargin(margin = Margin(top = 20))
             setLayoutResource(R.layout.bar_indv_marker)
         }
 
-        override fun getOffset(): MPPointF {
-            return MPPointF(-width.div(2).toFloat(), -height.toFloat())
-        }
-
         override fun refreshContent(e: Entry?, highlight: Highlight?) {
-            Log.d("CHARTS","DATA 1: ${data.getDataSetByIndex(highlight?.dataSetIndex ?: -1)}")
+            super.refreshContent(e, highlight)
+            val title = findViewById<TextView>(R.id.title)
+            val subTitle = findViewById<TextView>(R.id.sub_title)
+            e?.let { entry ->
+                title.text = days[entry.x.toInt()]
+                subTitle.text = entry.y.toString()
+            }
+            //Log.d("CHARTS","DATA 1: ${}")
         }
     }
 }

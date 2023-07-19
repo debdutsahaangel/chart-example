@@ -15,7 +15,6 @@ import com.github.mikephil.charting.utils.Transformer
 import com.github.mikephil.charting.utils.Utils
 import com.github.mikephil.charting.utils.ViewPortHandler
 import kotlin.math.ceil
-import kotlin.math.round
 
 class RoundedBarChartRenderer(
     chart: BarDataProvider?,
