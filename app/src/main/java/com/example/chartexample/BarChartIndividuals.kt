@@ -142,16 +142,11 @@ class BarChartIndividuals @JvmOverloads constructor(
         }
 
         override fun getOffset(): MPPointF {
-            val width = (barChart.renderer as? RoundedBarChartRenderer)?.getIndividualBarWidth()?.toFloat() ?: 0f
-            return MPPointF(width.div(2), 0f)
+            return MPPointF(-width.div(2).toFloat(), -height.toFloat())
         }
 
         override fun refreshContent(e: Entry?, highlight: Highlight?) {
             Log.d("CHARTS","DATA 1: ${data.getDataSetByIndex(highlight?.dataSetIndex ?: -1)}")
-            val rnd = Random()
-            val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
-            setBackgroundColor(color)
-            forceLayoutMeasurement(width = MeasureSpec.UNSPECIFIED, height = 100)
         }
     }
 }
