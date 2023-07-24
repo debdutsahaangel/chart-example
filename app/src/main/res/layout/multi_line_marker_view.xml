@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.example.chartexample.DashedLine
+        android:id="@+id/dashed_line"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/dotted_line"
+        app:layout_constraintStart_toStartOf="@id/tooltip"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tooltip"
+    />
+
+    <ImageView
+        android:layout_width="14dp"
+        android:layout_height="7dp"
+        app:layout_constraintBottom_toTopOf="@id/tooltip"
+        app:layout_constraintStart_toStartOf="@id/tooltip"
+        app:layout_constraintEnd_toEndOf="@id/tooltip"
+        android:src="@drawable/ic_vector_triangle"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tooltip"
+        android:layout_width="41dp"
+        android:layout_height="20dp"
+        app:cardCornerRadius="4dp"
+        app:cardBackgroundColor="@color/tooltip_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <TextView
+            android:id="@+id/time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="8sp"
+            android:textColor="@android:color/white"
+            tools:ignore="SmallSp" />
+    </androidx.cardview.widget.CardView>
+
+    <com.example.chartexample.MultiTextView
+        android:id="@+id/multi_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/dashed_line"
+        app:layout_constraintStart_toEndOf="@id/dashed_line"
+        android:orientation="vertical"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
