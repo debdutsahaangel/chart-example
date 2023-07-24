@@ -143,11 +143,9 @@ class LineChartGradient @JvmOverloads constructor(
         val targetLeft = max(topLeft, bottomLeft)
         val bottom = topLineChart.viewPortHandler.chartHeight - topLineChart.viewPortHandler.contentBottom()
         topLineChart.apply {
-            translationX = targetLeft.minus(topLeft)
             y = 0f
         }
         bottomLineChart.apply {
-            translationX = targetLeft.minus(bottomLeft)
             y = -bottom
         }
     }
@@ -194,7 +192,7 @@ class LineChartGradient @JvmOverloads constructor(
         top: Int? = null,
         bottom: Int? = null
     ) {
-        val layoutParams = (this.layoutParams as? MarginLayoutParams)
+        val layoutParams = (this@updateMargin.layoutParams as? MarginLayoutParams)
         layoutParams?.setMargins(
             left ?: this.marginLeft,
             top ?: this.marginTop,

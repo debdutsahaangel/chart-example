@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-
-<item>
-    <rotate
-        android:fromDegrees="90"
-        android:toDegrees="90"
-        android:pivotX="50%"
-        android:pivotY="50%" >
-        <shape
-            android:shape="line"
-            >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:top="2dp"
+        android:bottom="2dp"
+        android:left="2dp">
+        <shape>
+            <solid android:color="@android:color/transparent"/>
             <stroke
-                android:color="@android:color/black"
-                android:dashWidth="10px"
-                android:dashGap="10px"
-                android:width="1dp"
-                />
+                android:width="2dp"
+                android:color="#ffffff"
+                android:dashGap="4dp"
+                android:dashWidth="4dp"/>
         </shape>
-    </rotate>
-</item>
-
+    </item>
 </layer-list>
