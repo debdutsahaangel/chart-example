@@ -35,7 +35,7 @@ open class DottedLineMarkerView constructor(context: Context) :
         val barWidth = (chartView?.renderer as? RoundedBarChartRenderer)?.getIndividualBarWidth() ?: 0
         val chartViewHighlight = chartView?.highlighted?.getOrNull(0)
         val translate = if (chartViewHighlight?.dataSetIndex == 0) 1 else -1
-        return MPPointF(barWidth.div(2).times(translate).toFloat(),  0f)
+        return MPPointF(barWidth.div(2).times(translate).minus(width.div(2)).toFloat(),  0f)
     }
 
     /**
