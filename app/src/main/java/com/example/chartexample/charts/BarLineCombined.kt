@@ -50,14 +50,20 @@ class BarLineCombined @JvmOverloads constructor(
         val modifiedLineSets = dataSet.lineChartDataSet.map {
             it.dataSet.apply {
                 setDrawValues(false)
-                color = Color.parseColor(it.lineColor)
+                it.lineColor?.let { lineColor ->
+                    color = Color.parseColor(lineColor)
+                }
+                it.circleColor?.let { circleColor ->
+                    setCircleColor(Color.parseColor(circleColor))
+                }
+                it.fillColor?.let { color ->
+                    fillColor = Color.parseColor(color)
+                }
                 lineWidth = 1.5f
-                setCircleColor(Color.parseColor(it.circleColor))
                 circleRadius = 5f
-                fillColor = Color.parseColor(it.fillColor)
                 mode = LineDataSet.Mode.LINEAR
                 setDrawValues(true)
-                axisDependency = YAxis.AxisDependency.RIGHT
+                axisDependency = it.axisDependency
                 setDrawValues(false)
                 isHighlightEnabled = false
             }
