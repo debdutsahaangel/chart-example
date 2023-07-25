@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.charts
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,6 +7,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.example.chartexample.datamodel.MultiLineData
+import com.example.chartexample.markers.MultiLineChartMarkerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis

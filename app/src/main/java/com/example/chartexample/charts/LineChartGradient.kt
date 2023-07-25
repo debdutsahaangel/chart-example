@@ -1,24 +1,16 @@
-package com.example.chartexample
+package com.example.chartexample.charts
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup.MarginLayoutParams
-import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
+import com.example.chartexample.R
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -26,7 +18,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 class LineChartGradient @JvmOverloads constructor(
     private val context: Context,

@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.datamodel
 
 data class GradientColors(
     val startColor: String,

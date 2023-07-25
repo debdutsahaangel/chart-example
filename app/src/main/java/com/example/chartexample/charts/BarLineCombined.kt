@@ -1,28 +1,26 @@
-package com.example.chartexample
+package com.example.chartexample.charts
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.example.chartexample.R
+import com.example.chartexample.datamodel.BarChartCombinedData
+import com.example.chartexample.datamodel.Margin
+import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.markers.BarChartCombinedMarker
+import com.example.chartexample.renderer.LineChartCircleCenterRenderer
+import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.CombinedData
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.renderer.CombinedChartRenderer
-import com.github.mikephil.charting.renderer.LineChartRenderer
-import com.github.mikephil.charting.utils.MPPointF
 
 
 class BarLineCombined @JvmOverloads constructor(

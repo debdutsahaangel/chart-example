@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.renderer
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

@@ -3,6 +3,10 @@ package com.example.chartexample
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.chartexample.databinding.ActivityMainBinding
+import com.example.chartexample.datamodel.BarChartCombinedData
+import com.example.chartexample.datamodel.BarChartIndividualDataSet
+import com.example.chartexample.datamodel.GradientColors
+import com.example.chartexample.datamodel.LineChartIndividualDataSet
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry

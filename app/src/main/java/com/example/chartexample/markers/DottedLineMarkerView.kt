@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.markers
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.RelativeLayout
+import com.example.chartexample.datamodel.Margin
+import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.IMarker
 import com.github.mikephil.charting.data.Entry

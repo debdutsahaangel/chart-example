@@ -1,16 +1,15 @@
-package com.example.chartexample
+package com.example.chartexample.charts
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.example.chartexample.datamodel.BarChartIndividualDataSet
+import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 class BarChartNegetive @JvmOverloads constructor(

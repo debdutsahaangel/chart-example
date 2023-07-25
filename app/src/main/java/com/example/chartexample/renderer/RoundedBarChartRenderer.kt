@@ -1,10 +1,11 @@
-package com.example.chartexample
+package com.example.chartexample.renderer
 
 import android.graphics.Canvas
 import android.graphics.LinearGradient
 import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Shader
+import com.example.chartexample.datamodel.RoundedRadiusUnit
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.buffer.BarBuffer
 import com.github.mikephil.charting.highlight.Highlight
