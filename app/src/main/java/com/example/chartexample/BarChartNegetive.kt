@@ -20,40 +20,51 @@ class BarChartNegetive @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     // creating a string array for displaying days.
-    private val days = listOf("17600", "17650", "17700", "17750", "17800", "17850")
+    private val barChart by lazy { BarChart(context) }
+
+    private var formattedValues = listOf<String>()
 
     private val barSpace = 0f
 
     private val groupSpace = 0.70f
 
-    init {
-        // initializing variable for bar chart.
-        val barChart = BarChart(context)
-        addView(barChart)
-        // creating a new bar data set.
-        val barDataSet1 = BarDataSet(getBarEntriesOne(), "First Set");
-        barDataSet1.apply {
-            setGradientColor(Color.parseColor("#40D64D4D"), Color.parseColor("#D64D4D"))
-            setDrawValues(false)
+    fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
+        val modifiedDataSets = dataSet.map {
+            it.dataSet.apply {
+                setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
+                setDrawValues(false)
+            }
         }
-        val barDataSet2 = BarDataSet(getBarEntriesTwo(), "Second Set");
-        barDataSet2.apply {
-            setGradientColor(Color.parseColor("#26008F75"), Color.parseColor("#008F3C"))
-            setDrawValues(false)
-        }
-
-        val barData = BarData(barDataSet1, barDataSet2);
-        barData.barWidth = 0.15f
-
+        val barData = BarData(modifiedDataSets).apply { barWidth = 0.15f }
         barChart.apply {
             data = barData
-            description.isEnabled = false
+            groupBars(0f, groupSpace, barSpace)
             xAxis.apply {
-                valueFormatter = IndexAxisValueFormatter(days)
-                setCenterAxisLabels(true)
-                position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 isGranularityEnabled = true
+            }
+            setVisibleXRangeMaximum(4f)
+            notifyDataSetChanged()
+            invalidate()
+        }
+    }
+
+    fun setXValueFormatter(formattedValues: List<String>) {
+        this.formattedValues = formattedValues
+        barChart.xAxis.apply {
+            valueFormatter = IndexAxisValueFormatter(formattedValues)
+        }
+    }
+
+    init {
+        // initializing variable for bar chart.
+        addView(barChart)
+
+        barChart.apply {
+            description.isEnabled = false
+            xAxis.apply {
+                setCenterAxisLabels(true)
+                position = XAxis.XAxisPosition.BOTTOM
                 axisMinimum = 0f
                 setDrawGridLines(false)
                 textColor = Color.parseColor("#ACB2BD")
@@ -73,8 +84,6 @@ class BarChartNegetive @JvmOverloads constructor(
             }
 
             isDragEnabled = true
-            setVisibleXRangeMaximum(4f)
-            groupBars(0f, groupSpace, barSpace)
             setScaleEnabled(false)
             val roundRenderer = RoundedBarChartRenderer(
                 chart = barChart,
@@ -87,28 +96,5 @@ class BarChartNegetive @JvmOverloads constructor(
             legend.isEnabled = false
             invalidate()
         }
-    }
-
-    private fun getBarEntriesOne(): List<BarEntry> {
-        return listOf(
-            BarEntry(1f, 4f),
-            BarEntry(2f, -6f),
-            BarEntry(3f, 8f),
-            BarEntry(4f, -2f),
-            BarEntry(5f, 4f),
-            BarEntry(6f, -1f)
-        )
-    }
-
-    // array list for second set.
-    private fun getBarEntriesTwo(): List<BarEntry> {
-        return listOf(
-            BarEntry(1f, 8f),
-            BarEntry(2f, 12f),
-            BarEntry(3f, -4f),
-            BarEntry(4f, -1f),
-            BarEntry(5f, 7f),
-            BarEntry(6f, -3f)
-        )
     }
 }
