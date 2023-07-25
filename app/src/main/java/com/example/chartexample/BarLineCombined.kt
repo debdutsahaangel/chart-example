@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.CombinedChart
@@ -41,14 +43,11 @@ class BarLineCombined @JvmOverloads constructor(
         val combinedChart = CombinedChart(context)
 
         addView(combinedChart)
-
         val combinedData = CombinedData()
         combinedData.setData(generateBarChartData())
         combinedData.setData(generateLineData())
         combinedChart.apply {
             description.isEnabled = false
-            isHighlightFullBarEnabled = false
-            isHighlightPerTapEnabled = false
             drawOrder = arrayOf(
                 DrawOrder.BAR,
                 DrawOrder.LINE
@@ -98,6 +97,12 @@ class BarLineCombined @JvmOverloads constructor(
                     combinedChart.viewPortHandler
                 )
             )
+            marker = BarChartCombinedMarker(context = context).apply {
+                setChartView(chart = combinedChart)
+                setMargin(margin = Margin(top = 20))
+                setLayoutResource(res = R.layout.combined_marker)
+            }
+            setTouchEnabled(true)
             legend.isEnabled = false
             invalidate()
         }
@@ -133,6 +138,7 @@ class BarLineCombined @JvmOverloads constructor(
             setDrawValues(true)
             axisDependency = YAxis.AxisDependency.RIGHT
             setDrawValues(false)
+            isHighlightEnabled = false
         }
         set2.apply {
             color = Color.parseColor("#FEEED4")
@@ -144,6 +150,7 @@ class BarLineCombined @JvmOverloads constructor(
             setDrawValues(true)
             axisDependency = YAxis.AxisDependency.RIGHT
             setDrawValues(false)
+            isHighlightEnabled = false
         }
         d.addDataSet(set1)
         d.addDataSet(set2)
@@ -190,17 +197,6 @@ class BarLineCombined @JvmOverloads constructor(
             BarEntry(4f, 1f),
             BarEntry(5f, 7f),
             BarEntry(6f, 3f)
-        )
-    }
-
-    private fun getBarEntriesThree(): List<BarEntry> {
-        return listOf(
-            BarEntry(1f, 6f),
-            BarEntry(2f, 6f),
-            BarEntry(3f, 4f),
-            BarEntry(4f, 10f),
-            BarEntry(5f, 5f),
-            BarEntry(6f, 4f)
         )
     }
 }

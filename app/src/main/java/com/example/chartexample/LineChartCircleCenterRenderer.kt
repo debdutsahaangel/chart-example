@@ -479,7 +479,7 @@ class LineChartCircleCenterRenderer(
         mCirclePaintInner.color = Color.WHITE
     }
 
-    protected fun drawCircles(c: Canvas) {
+    private fun drawCircles(c: Canvas) {
         mRenderPaint.style = Paint.Style.FILL
         val phaseY = mAnimator.phaseY
         mCirclesBuffer[0] = 0f
@@ -574,7 +574,7 @@ class LineChartCircleCenterRenderer(
     /**
      * Releases the drawing bitmap. This should be called when [LineChart.onDetachedFromWindow].
      */
-    fun releaseBitmap() {
+    private fun releaseBitmap() {
         if (mBitmapCanvas != null) {
             mBitmapCanvas!!.setBitmap(null)
             mBitmapCanvas = null

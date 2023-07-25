@@ -10,13 +10,15 @@ import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.IMarker
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.renderer.CombinedChartRenderer
 import com.github.mikephil.charting.utils.MPPointF
 import java.lang.ref.WeakReference
 
 open class BarChartCombinedMarker constructor(context: Context) :
     RelativeLayout(context), IMarker {
 
-    private val mOffset2 = MPPointF()
+    private val mOffset2 by lazy { MPPointF() }
+
     private var mWeakChart: WeakReference<Chart<*>>? = null
 
     private var inflatedView: View? = null
@@ -33,8 +35,11 @@ open class BarChartCombinedMarker constructor(context: Context) :
     }
 
     override fun getOffset(): MPPointF {
-        val barWidth = (chartView?.renderer as? RoundedBarChartRenderer)?.getIndividualBarWidth() ?: 0
-        return MPPointF(barWidth.div(2).toFloat(),  0f)
+        val barChartRenderer = (chartView?.renderer as? CombinedChartRenderer)?.getSubRenderer(0)
+        val barWidth = (barChartRenderer as? RoundedBarChartRenderer)?.getIndividualBarWidth() ?: 0
+        val chartViewHighlight = chartView?.highlighted?.getOrNull(0)
+        val translate = if (chartViewHighlight?.dataSetIndex == 0) 1 else -1
+        return MPPointF(barWidth.div(2).times(translate).toFloat(),  0f)
     }
 
     /**
