@@ -71,6 +71,7 @@ class BarChartIndividuals @JvmOverloads constructor(
     }
 
     fun setXValueFormatter(formattedValues: List<String>) {
+        if (formattedValues.isEmpty()) return
         this.formattedValues = formattedValues
         barChart.xAxis.apply {
             valueFormatter = IndexAxisValueFormatter(formattedValues)
