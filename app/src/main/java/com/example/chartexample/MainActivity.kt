@@ -1,13 +1,43 @@
 package com.example.chartexample
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import com.example.chartexample.databinding.ActivityMainBinding
+import com.example.chartexample.dataGenerator.barChartData
+import com.example.chartexample.dataGenerator.barSignData
+import com.example.chartexample.dataGenerator.combinedData
+import com.example.chartexample.dataGenerator.multiLineData
 
 class MainActivity : AppCompatActivity() {
+    private val xAxisLabel = listOf("17600", "17650", "17700", "17750", "17800", "17850")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(this.layoutInflater)
+        setContentView(binding.root)
+        binding.barChartIndv.apply {
+            setXValueFormatter(formattedValues = xAxisLabel)
+            setDataSet(
+                dataSet = barChartData
+            )
+        }
+
+        binding.barChartSign.apply {
+            setXValueFormatter(formattedValues = xAxisLabel)
+            setDataSet(
+                dataSet = barSignData
+            )
+        }
+        binding.combinedChart.apply {
+            setXValueFormatter(formattedValues = xAxisLabel)
+            setDataSet(
+                dataSet = combinedData
+            )
+        }
+
+        binding.multiLineChart.apply {
+            setDataSet(
+                dataSet = multiLineData
+            )
+        }
     }
 }

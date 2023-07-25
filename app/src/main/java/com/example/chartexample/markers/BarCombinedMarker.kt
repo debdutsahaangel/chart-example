@@ -1,11 +1,13 @@
-package com.example.chartexample
+package com.example.chartexample.markers
 
 import android.content.Context
 import android.graphics.Canvas
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.RelativeLayout
+import com.example.chartexample.datamodel.Margin
+import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.IMarker
 import com.github.mikephil.charting.data.Entry
@@ -13,7 +15,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import java.lang.ref.WeakReference
 
-open class BarChartCombinedMarker constructor(context: Context) :
+open class BarCombinedMarker constructor(context: Context) :
     RelativeLayout(context), IMarker {
 
     private val mOffset2 = MPPointF()
@@ -22,7 +24,6 @@ open class BarChartCombinedMarker constructor(context: Context) :
     private var inflatedView: View? = null
 
     private var margin = Margin()
-
 
     fun setLayoutResource(res: Int) {
         setupLayoutResource(res)
@@ -34,7 +35,9 @@ open class BarChartCombinedMarker constructor(context: Context) :
 
     override fun getOffset(): MPPointF {
         val barWidth = (chartView?.renderer as? RoundedBarChartRenderer)?.getIndividualBarWidth() ?: 0
-        return MPPointF(barWidth.div(2).toFloat(),  0f)
+        val chartViewHighlight = chartView?.highlighted?.getOrNull(0)
+        val translate = if (chartViewHighlight?.dataSetIndex == 0) 1 else -1
+        return MPPointF(barWidth.div(2).times(translate).toFloat(),  0f)
     }
 
     /**
@@ -44,14 +47,14 @@ open class BarChartCombinedMarker constructor(context: Context) :
      */
     private fun setupLayoutResource(layoutResource: Int) {
         inflatedView = LayoutInflater.from(context).inflate(layoutResource, this)
-        inflatedView?.layoutParams = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        inflatedView?.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         inflatedView?.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
         inflatedView?.layout(0, 0, inflatedView?.measuredWidth ?: 0, inflatedView?.measuredHeight ?: 0)
     }
 
     private fun forceLayoutChange() {
         val exactHeight = chartView?.viewPortHandler?.contentBottom()?.minus(margin.top) ?: 0f
-        inflatedView?.layoutParams = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        inflatedView?.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         inflatedView?.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(exactHeight.toInt(), MeasureSpec.EXACTLY))
         inflatedView?.layout(0, 0, inflatedView?.measuredWidth ?: 0, inflatedView?.measuredHeight ?: 0)
     }

@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.markers
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,6 +7,8 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.forEachIndexed
+import com.example.chartexample.datamodel.MultiLineData
+import com.example.chartexample.R
 
 class MultiLineChartMarkerView constructor(context: Context) : FrameLayout(context) {
     init {

@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.helper
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,6 +9,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import com.example.chartexample.R
 
 class DashedLine
 @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
@@ -28,7 +29,8 @@ class DashedLine
         val defaultBlack = Color.argb(255, 0, 0, 0)
 
         if (attrs != null) {
-            val typedArray = context?.theme?.obtainStyledAttributes(attrs, R.styleable.DashedLine, defStyleAttr, 0)
+            val typedArray = context?.theme?.obtainStyledAttributes(attrs,
+                R.styleable.DashedLine, defStyleAttr, 0)
             dashHeight = typedArray?.getDimension(R.styleable.DashedLine_dashHeight, twoDpDefault) ?: twoDpDefault
             dashLength = typedArray?.getDimension(R.styleable.DashedLine_dashLength, twoDpDefault) ?: twoDpDefault
             minimumDashGap = typedArray?.getDimension(R.styleable.DashedLine_minimumDashGap, twoDpDefault) ?: twoDpDefault

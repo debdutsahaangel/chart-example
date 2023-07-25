@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.markers
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.RelativeLayout
+import com.example.chartexample.datamodel.Margin
+import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.IMarker
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
 
 open class DottedLineMarkerView constructor(context: Context) :
     RelativeLayout(context), IMarker {
@@ -22,6 +25,8 @@ open class DottedLineMarkerView constructor(context: Context) :
     private var inflatedView: View? = null
 
     private var margin = Margin()
+
+    private val isAlreadyRefreshed by lazy { AtomicBoolean(false) }
 
     fun setLayoutResource(res: Int) {
         setupLayoutResource(res)
@@ -45,16 +50,21 @@ open class DottedLineMarkerView constructor(context: Context) :
      */
     private fun setupLayoutResource(layoutResource: Int) {
         inflatedView = LayoutInflater.from(context).inflate(layoutResource, this)
-        inflatedView?.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        inflatedView?.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
-        inflatedView?.layout(0, 0, inflatedView?.measuredWidth ?: 0, inflatedView?.measuredHeight ?: 0)
+        inflatedView?.apply {
+            layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+            measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+            layout(0, 0, measuredWidth, measuredHeight)
+        }
     }
 
     private fun forceLayoutChange() {
         val exactHeight = chartView?.viewPortHandler?.contentBottom()?.minus(margin.top) ?: 0f
-        inflatedView?.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        inflatedView?.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(exactHeight.toInt(), MeasureSpec.EXACTLY))
-        inflatedView?.layout(0, 0, inflatedView?.measuredWidth ?: 0, inflatedView?.measuredHeight ?: 0)
+        if (isAlreadyRefreshed.get()) return
+        inflatedView?.apply {
+            layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+            measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(exactHeight.toInt(), MeasureSpec.EXACTLY))
+            layout(0, 0, measuredWidth, measuredHeight)
+        }
     }
 
     fun setChartView(chart: Chart<*>) {
@@ -93,7 +103,7 @@ open class DottedLineMarkerView constructor(context: Context) :
         canvas.restoreToCount(saveId)
     }
 
-    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+    override fun refreshContent(entry: Entry?, highlight: Highlight?) {
         forceLayoutChange()
     }
 }

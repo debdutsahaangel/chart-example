@@ -1,4 +1,4 @@
-package com.example.chartexample
+package com.example.chartexample.charts
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,9 +7,14 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.example.chartexample.datamodel.BarChartIndividualDataSet
+import com.example.chartexample.datamodel.LineChartIndividualDataSet
+import com.example.chartexample.datamodel.MultiLineData
+import com.example.chartexample.markers.MultiLineChartMarkerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -26,73 +31,63 @@ class MultiLineChart @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val lineChart by lazy { LineChart(context) }
+
+    fun setDataSet(dataSet: List<LineChartIndividualDataSet>) {
+        val modifiedLineDataSet = dataSet.map {
+            it.dataSet.apply {
+                setDrawValues(false)
+                it.lineColor?.let { lineColor ->
+                    color = Color.parseColor(lineColor)
+                }
+                it.circleColor?.let { circleColor ->
+                    setCircleColor(Color.parseColor(circleColor))
+                }
+                axisDependency = it.axisDependency
+                circleRadius = 5f
+                mode = LineDataSet.Mode.LINEAR
+                setDrawValues(true)
+                setDrawValues(false)
+                setDrawCircles(false)
+            }
+        }
+        val lineData = LineData(modifiedLineDataSet)
+        lineChart.apply {
+            data = lineData
+            setOnTouchListener { _, motionEvent ->
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        if (lineChart.viewPortHandler.isInBoundsX(motionEvent.rawX)) {
+                            val tapPointOnChart = lineChart.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.rawX,motionEvent.rawY)
+                            val values = buildList {
+                                repeat(lineData.dataSetCount) {
+                                    add(nearestValue(value = tapPointOnChart.x.toInt(), data = lineData.getDataSetByIndex(it)))
+                                }
+                            }
+                            setOrUpdateMarker(lineChart = lineChart, rawX = motionEvent.rawX, data = values, time = lineChart.xAxis.valueFormatter.getFormattedValue(tapPointOnChart.x.toFloat()))
+                            Log.d("CHARTS", "Values: $values - ${values.count()}")
+                        }
+                    }
+                }
+                true
+            }
+            notifyDataSetChanged()
+            invalidate()
+        }
+    }
+
     init {
         // initializing variable for bar chart.
-        val lineChart = LineChart(context)
         addView(lineChart)
-        // creating a new bar data set.
-        val lineDataSet1 = LineDataSet(getEntriesOne(), "First Set")
-        val lineDataSet2 = LineDataSet(getEntriesTwo(), "Second Set")
-        val lineDataSet3 = LineDataSet(getEntriesThree(), "Third Set")
-        val lineDataSet4 = LineDataSet(getEntriesFour(), "Fourth Part")
-        lineDataSet1.apply {
-            setDrawValues(false)
-            color = Color.parseColor("#F9BA4D")
-            setCircleColor(Color.parseColor("#F9BA4D"))
-            mode = LineDataSet.Mode.LINEAR
-            setDrawValues(true)
-            setDrawValues(false)
-            setDrawCircles(false)
-            axisDependency = YAxis.AxisDependency.RIGHT
-        }
-
-        lineDataSet2.apply {
-            setDrawValues(false)
-            color = Color.parseColor("#581DBE")
-            setCircleColor(Color.parseColor("#581DBE"))
-            mode = LineDataSet.Mode.LINEAR
-            setDrawValues(true)
-            setDrawValues(false)
-            setDrawCircles(false)
-        }
-
-        lineDataSet3.apply {
-            setDrawValues(false)
-            color = Color.parseColor("#581DBE")
-            setCircleColor(Color.parseColor("#581DBE"))
-            circleRadius = 5f
-            mode = LineDataSet.Mode.LINEAR
-            setDrawValues(true)
-            setDrawValues(false)
-            setDrawCircles(false)
-            color = Color.parseColor("#D64D4D")
-        }
-
-        lineDataSet4.apply {
-            setDrawValues(false)
-            color = Color.parseColor("#581DBE")
-            setCircleColor(Color.parseColor("#581DBE"))
-            circleRadius = 5f
-            mode = LineDataSet.Mode.LINEAR
-            setDrawValues(true)
-            setDrawValues(false)
-            setDrawCircles(false)
-            color = Color.parseColor("#21C7DB")
-        }
-
-        val lineData = LineData(lineDataSet1, lineDataSet2, lineDataSet3, lineDataSet4)
-
-        configureLineChart(lineChart = lineChart, lineData = lineData)
+        configureLineChart(lineChart = lineChart)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun configureLineChart(
         lineChart: LineChart,
-        lineData: LineData,
         scope: LineChart.() -> Unit = {}
     ) {
         lineChart.apply {
-            data = lineData
             description.isEnabled = false
             //isHighlightPerDragEnabled = false
             //isHighlightPerTapEnabled = false
@@ -131,23 +126,6 @@ class MultiLineChart @JvmOverloads constructor(
             setScaleEnabled(false)
             legend.isEnabled = false
             extraBottomOffset = 20f
-            setOnTouchListener { _, motionEvent ->
-                when (motionEvent.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        if (lineChart.viewPortHandler.isInBoundsX(motionEvent.rawX)) {
-                            val tapPointOnChart = lineChart.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.rawX,motionEvent.rawY)
-                            val values = buildList {
-                                repeat(lineData.dataSetCount) {
-                                    add(nearestValue(value = tapPointOnChart.x.toInt(), data = lineData.getDataSetByIndex(it)))
-                                }
-                            }
-                            setOrUpdateMarker(lineChart = lineChart, rawX = motionEvent.rawX, data = values, time = lineChart.xAxis.valueFormatter.getFormattedValue(tapPointOnChart.x.toFloat()))
-                            Log.d("CHARTS", "Values: $values - ${values.count()}")
-                        }
-                    }
-                }
-                true
-            }
             scope()
             invalidate()
         }
@@ -165,50 +143,6 @@ class MultiLineChart @JvmOverloads constructor(
             }
         }
         return MultiLineData(entry = nearValue, color = data.color)
-    }
-
-    private fun getEntriesOne(): List<Entry> {
-        return listOf(
-            Entry(0f, 17000f),
-            Entry(8f, 17050f),
-            Entry(12f, 17120f),
-            Entry(16f, 17300f),
-            Entry(18f, 17400f),
-            Entry(20f, 17200f)
-        )
-    }
-
-    private fun getEntriesTwo(): List<Entry> {
-        return listOf(
-            Entry(0f, 7f),
-            Entry(7f, 6f),
-            Entry(13f, 10f),
-            Entry(16f, 12f),
-            Entry(19f, 16f),
-            Entry(23f, 20f)
-        )
-    }
-
-    private fun getEntriesThree(): List<Entry> {
-        return listOf(
-            Entry(0f, 0f),
-            Entry(6f, 10f),
-            Entry(10f, 15f),
-            Entry(12f, 12f),
-            Entry(18f, 20f),
-            Entry(26f, 8f)
-        )
-    }
-
-    private fun getEntriesFour(): List<Entry> {
-        return listOf(
-            Entry(0f, 0f),
-            Entry(4f, 18f),
-            Entry(8f, 5f),
-            Entry(14f, 20f),
-            Entry(18f, 5f),
-            Entry(30f, 20f)
-        )
     }
 
     private fun setOrUpdateMarker(lineChart: LineChart, rawX: Float, data: List<MultiLineData?>, time: String) {
