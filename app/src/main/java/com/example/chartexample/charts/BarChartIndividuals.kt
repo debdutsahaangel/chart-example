@@ -9,6 +9,7 @@ import com.example.chartexample.R
 import com.example.chartexample.datamodel.BarChartIndividualDataSet
 import com.example.chartexample.datamodel.Margin
 import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.helper.BarChartIndvMarkerFormatter
 import com.example.chartexample.markers.DottedLineMarkerView
 import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
@@ -38,6 +39,8 @@ class BarChartIndividuals @JvmOverloads constructor(
     private var leftValueFormatter: ValueFormatter? = null
 
     private var rightValueFormatter: ValueFormatter? = null
+
+    private var markerFormatter: BarChartIndvMarkerFormatter? = null
 
 
     fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
@@ -87,6 +90,10 @@ class BarChartIndividuals @JvmOverloads constructor(
                 rightValueFormatter = valueFormatter
             }
         }
+    }
+
+    fun setMarkerFormatter(markerFormatter: BarChartIndvMarkerFormatter) {
+        this.markerFormatter = markerFormatter
     }
 
 
@@ -144,10 +151,8 @@ class BarChartIndividuals @JvmOverloads constructor(
         override fun refreshContent(entry: Entry?, highlight: Highlight?) {
             super.refreshContent(entry, highlight)
             val title = findViewById<TextView>(R.id.title)
-            val subTitle = findViewById<TextView>(R.id.sub_title)
             entry?.let {
-                title.text = formattedValues[entry.x.toInt()]
-                subTitle.text = entry.y.toString()
+                title.text = markerFormatter?.format(entry.x.toInt()) ?: formattedValues[entry.x.toInt()]
             }
         }
     }
