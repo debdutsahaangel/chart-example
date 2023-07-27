@@ -4,5 +4,6 @@ import com.github.mikephil.charting.data.Entry
 
 data class MultiLineData(
     val entry: Entry?,
-    val color: Int
+    val color: Int,
+    val lineIndex: Int
 )

@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import com.example.chartexample.datamodel.BarChartIndividualDataSet
 import com.example.chartexample.datamodel.LineChartIndividualDataSet
 import com.example.chartexample.datamodel.MultiLineData
+import com.example.chartexample.helper.MultiLineMarkerFormatter
 import com.example.chartexample.markers.MultiLineChartMarkerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -37,6 +38,8 @@ class MultiLineChart @JvmOverloads constructor(
     private var leftValueFormatter: ValueFormatter? = null
 
     private var rightValueFormatter: ValueFormatter? = null
+
+    private var lineMarkerFormatter: MultiLineMarkerFormatter? = null
 
     fun setDataSet(dataSet: List<LineChartIndividualDataSet>) {
         val modifiedLineDataSet = dataSet.map {
@@ -66,7 +69,7 @@ class MultiLineChart @JvmOverloads constructor(
                             val tapPointOnChart = lineChart.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(motionEvent.rawX,motionEvent.rawY)
                             val values = buildList {
                                 repeat(lineData.dataSetCount) {
-                                    add(nearestValue(value = tapPointOnChart.x.toInt(), data = lineData.getDataSetByIndex(it)))
+                                    add(nearestValue(value = tapPointOnChart.x.toInt(), data = lineData.getDataSetByIndex(it), lineIndex = it))
                                 }
                             }
                             setOrUpdateMarker(lineChart = lineChart, rawX = motionEvent.rawX, data = values, time = lineChart.xAxis.valueFormatter.getFormattedValue(tapPointOnChart.x.toFloat()))
@@ -96,6 +99,10 @@ class MultiLineChart @JvmOverloads constructor(
                 rightValueFormatter = valueFormatter
             }
         }
+    }
+
+    fun setMarkerValueFormatter(markerFormatter: MultiLineMarkerFormatter) {
+        this.lineMarkerFormatter = lineMarkerFormatter
     }
 
     init {
@@ -153,9 +160,9 @@ class MultiLineChart @JvmOverloads constructor(
         }
     }
 
-    private fun nearestValue(value: Int, data: ILineDataSet): MultiLineData? {
+    private fun nearestValue(value: Int, data: ILineDataSet, lineIndex: Int): MultiLineData? {
         if (data.entryCount == 0) return null
-        if (data.entryCount == 1) return MultiLineData(entry = data.getEntryForIndex(0), color = data.color) // (10) (12) (17) (19) (23) -- 15
+        if (data.entryCount == 1) return MultiLineData(entry = data.getEntryForIndex(0), color = data.color, lineIndex = lineIndex)
         var nearValue = data.getEntryForIndex(0)
         for (index in 1 until data.entryCount) {
             val currentNearXValue = abs(nearValue?.x?.minus(value) ?: 0f)
@@ -164,7 +171,7 @@ class MultiLineChart @JvmOverloads constructor(
                 nearValue = data.getEntryForIndex(index)
             }
         }
-        return MultiLineData(entry = nearValue, color = data.color)
+        return MultiLineData(entry = nearValue, color = data.color, lineIndex = lineIndex)
     }
 
     private fun setOrUpdateMarker(lineChart: LineChart, rawX: Float, data: List<MultiLineData?>, time: String) {
@@ -178,6 +185,6 @@ class MultiLineChart @JvmOverloads constructor(
             view
         }
         view?.x = rawX
-        view?.setData(data = data, time = time)
+        view?.setData(data = data, time = time, valueFormatter = lineMarkerFormatter)
     }
 }
