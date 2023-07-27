@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,6 +33,10 @@ class MultiLineChart @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val lineChart by lazy { LineChart(context) }
+
+    private var leftValueFormatter: ValueFormatter? = null
+
+    private var rightValueFormatter: ValueFormatter? = null
 
     fun setDataSet(dataSet: List<LineChartIndividualDataSet>) {
         val modifiedLineDataSet = dataSet.map {
@@ -73,6 +78,23 @@ class MultiLineChart @JvmOverloads constructor(
             }
             notifyDataSetChanged()
             invalidate()
+        }
+    }
+
+    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: YAxis.AxisDependency) {
+        when (axisDependency) {
+            YAxis.AxisDependency.LEFT -> {
+                lineChart.axisLeft.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                leftValueFormatter = valueFormatter
+            }
+            YAxis.AxisDependency.RIGHT -> {
+                lineChart.axisRight.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                rightValueFormatter = valueFormatter
+            }
         }
     }
 
@@ -150,7 +172,6 @@ class MultiLineChart @JvmOverloads constructor(
             getChildAt(1) as? MultiLineChartMarkerView
         } else {
             val requiredHeightForTheView = lineChart.viewPortHandler.contentBottom()
-            Log.d("CHARTS", "Required Height: $requiredHeightForTheView")
             val view = MultiLineChartMarkerView(context)
             val params = LayoutParams(LayoutParams.WRAP_CONTENT, requiredHeightForTheView.toInt())
             addView(view, params)

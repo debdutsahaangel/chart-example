@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.LineDataSet
 
 val combinedData = BarChartCombinedData(
     barChartDataSet = listOf(
+        // First red one
         BarChartIndividualDataSet(
             dataSet = BarDataSet(getBarEntriesForIndvFirst(), "Bar Chart 1"),
             gradientColor = GradientColors(
@@ -18,6 +19,7 @@ val combinedData = BarChartCombinedData(
                 endColor = "#D64D4D"
             )
         ),
+        //Second green one
         BarChartIndividualDataSet(
             dataSet = BarDataSet(
                 getBarEntriesForIndvSecond(),

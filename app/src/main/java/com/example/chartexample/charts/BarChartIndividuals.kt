@@ -13,9 +13,11 @@ import com.example.chartexample.markers.DottedLineMarkerView
 import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 
 class BarChartIndividuals @JvmOverloads constructor(
@@ -32,6 +34,11 @@ class BarChartIndividuals @JvmOverloads constructor(
     private val barChart by lazy { BarChart(context) }
 
     private var formattedValues = listOf<String>()
+
+    private var leftValueFormatter: ValueFormatter? = null
+
+    private var rightValueFormatter: ValueFormatter? = null
+
 
     fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
         val modifiedDataSets = dataSet.map {
@@ -64,6 +71,24 @@ class BarChartIndividuals @JvmOverloads constructor(
             valueFormatter = IndexAxisValueFormatter(formattedValues)
         }
     }
+
+    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: YAxis.AxisDependency) {
+        when (axisDependency) {
+            YAxis.AxisDependency.LEFT -> {
+                barChart.axisLeft.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                leftValueFormatter = valueFormatter
+            }
+            YAxis.AxisDependency.RIGHT -> {
+                barChart.axisRight.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                rightValueFormatter = valueFormatter
+            }
+        }
+    }
+
 
     init {
         addView(barChart)

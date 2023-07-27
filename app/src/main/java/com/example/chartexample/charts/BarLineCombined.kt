@@ -15,11 +15,13 @@ import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.renderer.CombinedChartRenderer
 
 
@@ -39,6 +41,10 @@ class BarLineCombined @JvmOverloads constructor(
     private val groupSpace = 0.70f
 
     private val combinedChart by lazy { CombinedChart(context) }
+
+    private var leftValueFormatter: ValueFormatter? = null
+
+    private var rightValueFormatter: ValueFormatter? = null
 
     fun setDataSet(dataSet: BarChartCombinedData) {
         val modifiedDataSets = dataSet.barChartDataSet.map {
@@ -114,6 +120,23 @@ class BarLineCombined @JvmOverloads constructor(
         this.formattedValues = formattedValues
         combinedChart.xAxis.apply {
             valueFormatter = IndexAxisValueFormatter(formattedValues)
+        }
+    }
+
+    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: AxisDependency) {
+        when (axisDependency) {
+            AxisDependency.LEFT -> {
+                combinedChart.axisLeft.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                leftValueFormatter = valueFormatter
+            }
+            AxisDependency.RIGHT -> {
+                combinedChart.axisRight.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                rightValueFormatter = valueFormatter
+            }
         }
     }
 

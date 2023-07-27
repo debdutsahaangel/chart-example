@@ -9,8 +9,10 @@ import com.example.chartexample.datamodel.RoundedRadiusUnit
 import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 
 class BarChartNegetive @JvmOverloads constructor(
     private val context: Context,
@@ -26,6 +28,10 @@ class BarChartNegetive @JvmOverloads constructor(
     private val barSpace = 0f
 
     private val groupSpace = 0.70f
+
+    private var leftValueFormatter: ValueFormatter? = null
+
+    private var rightValueFormatter: ValueFormatter? = null
 
     fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
         val modifiedDataSets = dataSet.map {
@@ -54,6 +60,24 @@ class BarChartNegetive @JvmOverloads constructor(
             valueFormatter = IndexAxisValueFormatter(formattedValues)
         }
     }
+
+    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: YAxis.AxisDependency) {
+        when (axisDependency) {
+            YAxis.AxisDependency.LEFT -> {
+                barChart.axisLeft.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                leftValueFormatter = valueFormatter
+            }
+            YAxis.AxisDependency.RIGHT -> {
+                barChart.axisRight.apply {
+                    setValueFormatter(valueFormatter)
+                }
+                rightValueFormatter = valueFormatter
+            }
+        }
+    }
+
 
     init {
         // initializing variable for bar chart.
