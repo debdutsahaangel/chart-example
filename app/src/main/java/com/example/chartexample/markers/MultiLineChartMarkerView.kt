@@ -50,7 +50,7 @@ class MultiTextView @JvmOverloads constructor(
         }
     }
 
-    fun format(multiLineData: MultiLineData, formatter: MultiLineMarkerFormatter?): String {
+    private fun format(multiLineData: MultiLineData, formatter: MultiLineMarkerFormatter?): String {
         return formatter?.let {
             multiLineData.entry?.let { entry ->
                 formatter.format(entry = entry, lineIdentifier = multiLineData.lineIndex)

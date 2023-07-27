@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.example.chartexample.R
 import com.example.chartexample.datamodel.BarChartCombinedData
-import com.example.chartexample.datamodel.Margin
 import com.example.chartexample.datamodel.RoundedRadiusUnit
 import com.example.chartexample.markers.BarChartCombinedMarker
 import com.example.chartexample.renderer.LineChartCircleCenterRenderer
@@ -14,7 +12,6 @@ import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.CombinedData
@@ -109,6 +106,7 @@ class BarLineCombined @JvmOverloads constructor(
                 isGranularityEnabled = true
                 axisMaximum = combinedData.xMax + 0.25f
             }
+            marker = BarChartCombinedMarker(context = context, chartView = combinedChart, data = combinedData)
             setVisibleXRangeMaximum(4f)
             notifyDataSetChanged()
             invalidate()
@@ -172,11 +170,6 @@ class BarLineCombined @JvmOverloads constructor(
 
             isDragEnabled = true
             setScaleEnabled(false)
-            marker = BarChartCombinedMarker(context = context).apply {
-                setChartView(chart = combinedChart)
-                setMargin(margin = Margin(top = 20))
-                setLayoutResource(res = R.layout.combined_marker)
-            }
             setTouchEnabled(true)
             legend.isEnabled = false
             invalidate()
