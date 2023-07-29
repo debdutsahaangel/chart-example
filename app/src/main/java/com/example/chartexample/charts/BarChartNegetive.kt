@@ -33,7 +33,7 @@ class BarChartNegetive @JvmOverloads constructor(
 
     private var rightValueFormatter: ValueFormatter? = null
 
-    fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
+    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true) {
         val modifiedDataSets = dataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
@@ -44,11 +44,16 @@ class BarChartNegetive @JvmOverloads constructor(
         barChart.apply {
             data = barData
             groupBars(0f, groupSpace, barSpace)
-            xAxis.apply {
-                granularity = 1f
-                isGranularityEnabled = true
+            if (scrollEnabled) {
+                xAxis.apply {
+                    granularity = 1f
+                    isGranularityEnabled = true
+                }
             }
-            setVisibleXRangeMaximum(4f)
+            if (scrollEnabled) {
+                setVisibleXRangeMaximum(4f)
+            }
+            isDragEnabled = scrollEnabled
             notifyDataSetChanged()
             invalidate()
         }

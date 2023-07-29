@@ -43,7 +43,7 @@ class BarChartIndividuals @JvmOverloads constructor(
     private var markerFormatter: BarChartIndvMarkerFormatter? = null
 
 
-    fun setDataSet(dataSet: List<BarChartIndividualDataSet>) {
+    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true) {
         val modifiedDataSets = dataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
@@ -54,11 +54,16 @@ class BarChartIndividuals @JvmOverloads constructor(
         barChart.apply {
             data = barData
             groupBars(0f, groupSpace, barSpace)
-            xAxis.apply {
-                granularity = 1f
-                isGranularityEnabled = true
+            if (scrollEnabled) {
+                xAxis.apply {
+                    granularity = 1f
+                    isGranularityEnabled = true
+                }
             }
-            setVisibleXRangeMaximum(4f)
+            isDragEnabled = scrollEnabled
+            if (scrollEnabled) {
+                setVisibleXRangeMaximum(4f)
+            }
             val indvMarker = BarChartIndvMarker(context = context)
             marker = indvMarker
             indvMarker.init()
@@ -134,6 +139,7 @@ class BarChartIndividuals @JvmOverloads constructor(
             roundRenderer.setRadiusUnit(RoundedRadiusUnit.Percentage)
             renderer = roundRenderer
             legend.isEnabled = false
+            barChart.extraTopOffset = 50f
             invalidate()
         }
     }

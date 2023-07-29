@@ -43,7 +43,7 @@ class BarLineCombined @JvmOverloads constructor(
 
     private var rightValueFormatter: ValueFormatter? = null
 
-    fun setDataSet(dataSet: BarChartCombinedData) {
+    fun setDataSet(dataSet: BarChartCombinedData, scrollEnabled: Boolean = true) {
         val modifiedDataSets = dataSet.barChartDataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
@@ -101,13 +101,16 @@ class BarLineCombined @JvmOverloads constructor(
                     combinedChart.viewPortHandler
                 )
             )
-            xAxis.apply {
-                granularity = 1f
-                isGranularityEnabled = true
-                axisMaximum = combinedData.xMax + 0.25f
+            if (scrollEnabled) {
+                xAxis.apply {
+                    granularity = 1f
+                    isGranularityEnabled = true
+                    axisMaximum = combinedData.xMax + 0.25f
+                }
+                setVisibleXRangeMaximum(4f)
             }
+            isDragEnabled = scrollEnabled
             marker = BarChartCombinedMarker(context = context, chartView = combinedChart, data = combinedData)
-            setVisibleXRangeMaximum(4f)
             notifyDataSetChanged()
             invalidate()
         }
@@ -172,6 +175,7 @@ class BarLineCombined @JvmOverloads constructor(
             setScaleEnabled(false)
             setTouchEnabled(true)
             legend.isEnabled = false
+            extraTopOffset = 70f
             invalidate()
         }
     }

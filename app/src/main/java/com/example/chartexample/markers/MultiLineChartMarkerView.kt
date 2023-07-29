@@ -2,6 +2,7 @@ package com.example.chartexample.markers
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -37,6 +38,7 @@ class MultiTextView @JvmOverloads constructor(
                     TextView(context).apply {
                         text = format(multiLineData = it, formatter = valueFormatter)
                         setTextColor(it.color)
+                        setTextSize(TypedValue.COMPLEX_UNIT_SP,9f)
                     }
                 )
             }

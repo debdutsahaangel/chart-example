@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -197,6 +198,7 @@ class BarChartCombinedMarkerTextView @JvmOverloads constructor(
             (view as? TextView)?.apply {
                 text = format(data = texts[index], formatter = valueFormatter)
                 setTextColor(texts[index].textColor)
+                setTextSize(TypedValue.COMPLEX_UNIT_SP,9f)
             }
         }
     }

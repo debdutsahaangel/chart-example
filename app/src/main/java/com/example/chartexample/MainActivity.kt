@@ -17,20 +17,23 @@ class MainActivity : AppCompatActivity() {
         binding.barChartIndv.apply {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
-                dataSet = barChartData
+                dataSet = barChartData,
+                scrollEnabled = false
             )
         }
 
         binding.barChartSign.apply {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
-                dataSet = barSignData
+                dataSet = barSignData,
+                scrollEnabled = false
             )
         }
         binding.combinedChart.apply {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
-                dataSet = combinedData
+                dataSet = combinedData,
+                scrollEnabled = false
             )
         }
 

@@ -155,6 +155,7 @@ class MultiLineChart @JvmOverloads constructor(
             setScaleEnabled(false)
             legend.isEnabled = false
             extraBottomOffset = 20f
+            extraTopOffset = 50f
             scope()
             invalidate()
         }

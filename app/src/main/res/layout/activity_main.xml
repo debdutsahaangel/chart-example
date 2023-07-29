@@ -14,7 +14,7 @@
         <com.example.chartexample.charts.BarChartIndividuals
             android:id="@+id/bar_chart_indv"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:text="Bar Chart"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,14 +28,14 @@
         <com.example.chartexample.charts.BarLineCombined
             android:id="@+id/combined_chart"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="270dp"
             android:text="Combined Chart"
             app:layout_constraintTop_toBottomOf="@+id/bar_chart_sign" />
 
         <com.example.chartexample.charts.MultiLineChart
             android:id="@+id/multi_line_chart"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="260dp"
             app:layout_constraintTop_toBottomOf="@+id/combined_chart" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
