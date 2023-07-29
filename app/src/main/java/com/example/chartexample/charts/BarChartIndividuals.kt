@@ -121,6 +121,7 @@ class BarChartIndividuals @JvmOverloads constructor(
                 axisLineColor = Color.parseColor("#ACB2BD")
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
+                spaceTop = 50f
             }
             axisRight.apply {
                 setDrawLabels(false)
@@ -139,7 +140,6 @@ class BarChartIndividuals @JvmOverloads constructor(
             roundRenderer.setRadiusUnit(RoundedRadiusUnit.Percentage)
             renderer = roundRenderer
             legend.isEnabled = false
-            barChart.extraTopOffset = 50f
             invalidate()
         }
     }

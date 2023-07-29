@@ -163,19 +163,20 @@ class BarLineCombined @JvmOverloads constructor(
                 axisLineColor = Color.parseColor("#ACB2BD")
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
+                spaceTop = 70f
             }
             axisRight.apply {
                 setDrawGridLines(false)
                 axisLineColor = Color.parseColor("#ACB2BD")
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
+                spaceTop = 70f
             }
 
             isDragEnabled = true
             setScaleEnabled(false)
             setTouchEnabled(true)
             legend.isEnabled = false
-            extraTopOffset = 70f
             invalidate()
         }
     }

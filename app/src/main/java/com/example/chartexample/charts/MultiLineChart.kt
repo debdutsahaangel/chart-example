@@ -144,18 +144,19 @@ class MultiLineChart @JvmOverloads constructor(
                 axisLineColor = Color.parseColor("#ACB2BD")
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
+                spaceTop = 50f
             }
             axisRight.apply {
                 setDrawGridLines(false)
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
                 axisLineColor = Color.parseColor("#ACB2BD")
+                spaceTop = 50f
             }
             isDragEnabled = true
             setScaleEnabled(false)
             legend.isEnabled = false
             extraBottomOffset = 20f
-            extraTopOffset = 50f
             scope()
             invalidate()
         }

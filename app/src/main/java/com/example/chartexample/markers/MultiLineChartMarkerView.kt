@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,6 +20,9 @@ class MultiLineChartMarkerView constructor(context: Context) : FrameLayout(conte
     }
 
     fun setData(data: List<MultiLineData?>, time: String, valueFormatter: MultiLineMarkerFormatter?) {
+//        setOnClickListener {
+//            visibility = if (visibility == View.INVISIBLE) View.VISIBLE else View.INVISIBLE
+//        }
         val multiTextView = findViewById<MultiTextView>(R.id.multi_text_view)
         val timeTextView = findViewById<TextView>(R.id.time_textview)
         multiTextView.setText(texts = data.filterNotNull(), valueFormatter = valueFormatter)
