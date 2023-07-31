@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.view.forEachIndexed
 import com.example.chartexample.datamodel.MultiLineData
 import com.example.chartexample.R
@@ -20,13 +21,22 @@ class MultiLineChartMarkerView constructor(context: Context) : FrameLayout(conte
     }
 
     fun setData(data: List<MultiLineData?>, time: String, valueFormatter: MultiLineMarkerFormatter?) {
-//        setOnClickListener {
-//            visibility = if (visibility == View.INVISIBLE) View.VISIBLE else View.INVISIBLE
-//        }
+        visibility = View.VISIBLE
+        val tooltip = findViewById<CardView>(R.id.tooltip)
         val multiTextView = findViewById<MultiTextView>(R.id.multi_text_view)
         val timeTextView = findViewById<TextView>(R.id.time_textview)
         multiTextView.setText(texts = data.filterNotNull(), valueFormatter = valueFormatter)
         timeTextView.text = time
+        multiTextView.setOnClickListener {
+            toggle()
+        }
+        tooltip.setOnClickListener {
+            toggle()
+        }
+    }
+
+    private fun View.toggle() {
+        visibility = if (visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
     }
 }
 
