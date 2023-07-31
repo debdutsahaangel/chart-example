@@ -6,11 +6,12 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.example.chartexample.datamodel.BarChartIndividualDataSet
 import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.helper.YAxisValueFormatter
 import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
@@ -29,17 +30,16 @@ class BarChartNegetive @JvmOverloads constructor(
 
     private val groupSpace = 0.70f
 
-    private var leftValueFormatter: ValueFormatter? = null
+    private var leftValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
-    private var rightValueFormatter: ValueFormatter? = null
-
-    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true) {
+    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true, headers: List<String>) {
         val modifiedDataSets = dataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
                 setDrawValues(false)
             }
         }
+        val maxYValue = modifiedDataSets.maxOf { it.yMax }
         val barData = BarData(modifiedDataSets).apply { barWidth = 0.15f }
         barChart.apply {
             data = barData
@@ -48,6 +48,13 @@ class BarChartNegetive @JvmOverloads constructor(
                 xAxis.apply {
                     granularity = 1f
                     isGranularityEnabled = true
+                }
+            }
+            axisLeft.apply {
+                valueFormatter = YAxisValueFormatter().apply {
+                    header = headers.getOrNull(0) ?: ""
+                    defaultValueFormatter = leftValueFormatter
+                    maxValue = maxYValue
                 }
             }
             if (scrollEnabled) {
@@ -66,21 +73,8 @@ class BarChartNegetive @JvmOverloads constructor(
         }
     }
 
-    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: YAxis.AxisDependency) {
-        when (axisDependency) {
-            YAxis.AxisDependency.LEFT -> {
-                barChart.axisLeft.apply {
-                    setValueFormatter(valueFormatter)
-                }
-                leftValueFormatter = valueFormatter
-            }
-            YAxis.AxisDependency.RIGHT -> {
-                barChart.axisRight.apply {
-                    setValueFormatter(valueFormatter)
-                }
-                rightValueFormatter = valueFormatter
-            }
-        }
+    fun setYValueFormatter(valueFormatter: ValueFormatter) {
+        leftValueFormatter = valueFormatter
     }
 
 
@@ -104,6 +98,7 @@ class BarChartNegetive @JvmOverloads constructor(
                 axisLineColor = Color.parseColor("#ACB2BD")
                 textColor = Color.parseColor("#ACB2BD")
                 textSize = 12f
+                spaceTop = 50f
             }
             axisRight.apply {
                 setDrawLabels(false)

@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
                 dataSet = barChartData,
-                scrollEnabled = false
+                scrollEnabled = false,
+                headers = listOf("OI")
             )
         }
 
@@ -26,20 +27,23 @@ class MainActivity : AppCompatActivity() {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
                 dataSet = barSignData,
-                scrollEnabled = false
+                scrollEnabled = false,
+                headers = listOf("OI")
             )
         }
         binding.combinedChart.apply {
             setXValueFormatter(formattedValues = xAxisLabel)
             setDataSet(
                 dataSet = combinedData,
-                scrollEnabled = false
+                scrollEnabled = false,
+                headers = listOf("0I","PCR")
             )
         }
 
         binding.multiLineChart.apply {
             setDataSet(
-                dataSet = multiLineData
+                dataSet = multiLineData,
+                headers = listOf("OI","PCR")
             )
         }
     }

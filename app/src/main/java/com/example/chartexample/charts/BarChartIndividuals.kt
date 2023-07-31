@@ -10,13 +10,14 @@ import com.example.chartexample.datamodel.BarChartIndividualDataSet
 import com.example.chartexample.datamodel.Margin
 import com.example.chartexample.datamodel.RoundedRadiusUnit
 import com.example.chartexample.helper.BarChartIndvMarkerFormatter
+import com.example.chartexample.helper.YAxisValueFormatter
 import com.example.chartexample.markers.DottedLineMarkerView
 import com.example.chartexample.renderer.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
@@ -36,20 +37,19 @@ class BarChartIndividuals @JvmOverloads constructor(
 
     private var formattedValues = listOf<String>()
 
-    private var leftValueFormatter: ValueFormatter? = null
-
-    private var rightValueFormatter: ValueFormatter? = null
+    private var leftValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
     private var markerFormatter: BarChartIndvMarkerFormatter? = null
 
 
-    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true) {
+    fun setDataSet(dataSet: List<BarChartIndividualDataSet>, scrollEnabled: Boolean = true, headers: List<String>) {
         val modifiedDataSets = dataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
                 setDrawValues(false)
             }
         }
+        val maxYValue = modifiedDataSets.maxOf { it.yMax }
         val barData = BarData(modifiedDataSets).apply { barWidth = 0.15f }
         barChart.apply {
             data = barData
@@ -59,6 +59,14 @@ class BarChartIndividuals @JvmOverloads constructor(
                     granularity = 1f
                     isGranularityEnabled = true
                 }
+            }
+            axisLeft.apply {
+                valueFormatter = YAxisValueFormatter()
+                    .apply {
+                        header = headers.getOrNull(0) ?: ""
+                        defaultValueFormatter = leftValueFormatter
+                        maxValue = maxYValue
+                    }
             }
             isDragEnabled = scrollEnabled
             if (scrollEnabled) {
@@ -80,21 +88,8 @@ class BarChartIndividuals @JvmOverloads constructor(
         }
     }
 
-    fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: YAxis.AxisDependency) {
-        when (axisDependency) {
-            YAxis.AxisDependency.LEFT -> {
-                barChart.axisLeft.apply {
-                    setValueFormatter(valueFormatter)
-                }
-                leftValueFormatter = valueFormatter
-            }
-            YAxis.AxisDependency.RIGHT -> {
-                barChart.axisRight.apply {
-                    setValueFormatter(valueFormatter)
-                }
-                rightValueFormatter = valueFormatter
-            }
-        }
+    fun setYValueFormatter(valueFormatter: ValueFormatter) {
+        leftValueFormatter = valueFormatter
     }
 
     fun setMarkerFormatter(markerFormatter: BarChartIndvMarkerFormatter) {

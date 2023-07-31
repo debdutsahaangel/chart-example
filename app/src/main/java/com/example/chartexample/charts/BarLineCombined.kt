@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.example.chartexample.datamodel.BarChartCombinedData
 import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.helper.YAxisValueFormatter
 import com.example.chartexample.markers.BarChartCombinedMarker
 import com.example.chartexample.renderer.LineChartCircleCenterRenderer
 import com.example.chartexample.renderer.RoundedBarChartRenderer
@@ -17,6 +18,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.CombinedData
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.renderer.CombinedChartRenderer
@@ -39,11 +41,11 @@ class BarLineCombined @JvmOverloads constructor(
 
     private val combinedChart by lazy { CombinedChart(context) }
 
-    private var leftValueFormatter: ValueFormatter? = null
+    private var leftValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
-    private var rightValueFormatter: ValueFormatter? = null
+    private var rightValueFormatter: ValueFormatter? = DefaultValueFormatter(1)
 
-    fun setDataSet(dataSet: BarChartCombinedData, scrollEnabled: Boolean = true) {
+    fun setDataSet(dataSet: BarChartCombinedData, scrollEnabled: Boolean = true, headers: List<String>) {
         val modifiedDataSets = dataSet.barChartDataSet.map {
             it.dataSet.apply {
                 setGradientColor(Color.parseColor(it.gradientColor.startColor), Color.parseColor(it.gradientColor.endColor))
@@ -71,6 +73,8 @@ class BarLineCombined @JvmOverloads constructor(
                 isHighlightEnabled = false
             }
         }
+        val maxLeftYValue = modifiedDataSets.maxOf { it.yMax }
+        val maxRightYValue = modifiedDataSets.maxOf { it.yMax }
         val combinedData = CombinedData().apply {
             // Setting the bar chart data set for displaying bar chart
             setData(
@@ -109,6 +113,20 @@ class BarLineCombined @JvmOverloads constructor(
                 }
                 setVisibleXRangeMaximum(4f)
             }
+            axisLeft.apply {
+                valueFormatter = YAxisValueFormatter().apply {
+                    maxValue = maxLeftYValue
+                    defaultValueFormatter = leftValueFormatter
+                    header = headers.getOrNull(0) ?: ""
+                }
+            }
+            axisRight.apply {
+                valueFormatter = YAxisValueFormatter().apply {
+                    maxValue = maxRightYValue
+                    defaultValueFormatter = rightValueFormatter
+                    header = headers.getOrNull(1) ?: ""
+                }
+            }
             isDragEnabled = scrollEnabled
             marker = BarChartCombinedMarker(context = context, chartView = combinedChart, data = combinedData)
             notifyDataSetChanged()
@@ -127,15 +145,9 @@ class BarLineCombined @JvmOverloads constructor(
     fun setYValueFormatter(valueFormatter: ValueFormatter, axisDependency: AxisDependency) {
         when (axisDependency) {
             AxisDependency.LEFT -> {
-                combinedChart.axisLeft.apply {
-                    setValueFormatter(valueFormatter)
-                }
                 leftValueFormatter = valueFormatter
             }
             AxisDependency.RIGHT -> {
-                combinedChart.axisRight.apply {
-                    setValueFormatter(valueFormatter)
-                }
                 rightValueFormatter = valueFormatter
             }
         }

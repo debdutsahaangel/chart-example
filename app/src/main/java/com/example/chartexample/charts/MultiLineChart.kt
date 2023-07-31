@@ -4,21 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import com.example.chartexample.datamodel.BarChartIndividualDataSet
 import com.example.chartexample.datamodel.LineChartIndividualDataSet
 import com.example.chartexample.datamodel.MultiLineData
 import com.example.chartexample.helper.MultiLineMarkerFormatter
+import com.example.chartexample.helper.YAxisValueFormatter
 import com.example.chartexample.markers.MultiLineChartMarkerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
@@ -35,13 +33,14 @@ class MultiLineChart @JvmOverloads constructor(
 
     private val lineChart by lazy { LineChart(context) }
 
-    private var leftValueFormatter: ValueFormatter? = null
+    private var leftValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
-    private var rightValueFormatter: ValueFormatter? = null
+    private var rightValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
     private var lineMarkerFormatter: MultiLineMarkerFormatter? = null
 
-    fun setDataSet(dataSet: List<LineChartIndividualDataSet>) {
+    @SuppressLint("ClickableViewAccessibility")
+    fun setDataSet(dataSet: List<LineChartIndividualDataSet>, headers: List<String>) {
         val modifiedLineDataSet = dataSet.map {
             it.dataSet.apply {
                 setDrawValues(false)
@@ -59,6 +58,8 @@ class MultiLineChart @JvmOverloads constructor(
                 setDrawCircles(false)
             }
         }
+        val maxLeftYValue = modifiedLineDataSet.filter { it.axisDependency == YAxis.AxisDependency.LEFT }.maxOf { it.yMax }
+        val maxRightYValue = modifiedLineDataSet.filter { it.axisDependency == YAxis.AxisDependency.RIGHT }.maxOf { it.yMax }
         val lineData = LineData(modifiedLineDataSet)
         lineChart.apply {
             data = lineData
@@ -73,11 +74,24 @@ class MultiLineChart @JvmOverloads constructor(
                                 }
                             }
                             setOrUpdateMarker(lineChart = lineChart, rawX = motionEvent.rawX, data = values, time = lineChart.xAxis.valueFormatter.getFormattedValue(tapPointOnChart.x.toFloat()))
-                            Log.d("CHARTS", "Values: $values - ${values.count()}")
                         }
                     }
                 }
                 true
+            }
+            axisLeft.apply {
+                valueFormatter = YAxisValueFormatter().apply {
+                    maxValue = maxLeftYValue
+                    defaultValueFormatter = leftValueFormatter
+                    header = headers.getOrNull(0) ?: ""
+                }
+            }
+            axisRight.apply {
+                valueFormatter = YAxisValueFormatter().apply {
+                    maxValue = maxRightYValue
+                    defaultValueFormatter = rightValueFormatter
+                    header = headers.getOrNull(1) ?: ""
+                }
             }
             notifyDataSetChanged()
             invalidate()
