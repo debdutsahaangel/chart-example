@@ -150,11 +150,12 @@ class BarChartIndividuals @JvmOverloads constructor(
         }
 
         override fun refreshContent(entry: Entry?, highlight: Highlight?) {
-            super.refreshContent(entry, highlight)
             val title = findViewById<TextView>(R.id.title)
             entry?.let {
-                title.text = markerFormatter?.format(entry.x.toInt()) ?: formattedValues[entry.x.toInt()]
+                val text = markerFormatter?.format(groupIndex = entry.x.toInt()) ?: formattedValues[entry.x.toInt()]
+                title.text = text
             }
+            super.refreshContent(entry, highlight)
         }
     }
 }

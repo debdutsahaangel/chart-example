@@ -2,11 +2,13 @@ package com.example.chartexample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.chartexample.databinding.ActivityMainBinding
 import com.example.chartexample.dataGenerator.barChartData
 import com.example.chartexample.dataGenerator.barSignData
 import com.example.chartexample.dataGenerator.combinedData
 import com.example.chartexample.dataGenerator.multiLineData
+import com.example.chartexample.helper.BarChartIndvMarkerFormatter
 
 class MainActivity : AppCompatActivity() {
     private val xAxisLabel = listOf("17600", "17650", "17700", "17750", "17800", "17850")
@@ -16,6 +18,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.barChartIndv.apply {
             setXValueFormatter(formattedValues = xAxisLabel)
+            setMarkerFormatter(markerFormatter = object : BarChartIndvMarkerFormatter {
+                override fun format(groupIndex: Int): String {
+                    Log.d("GROUP", "INDEX: ${xAxisLabel[groupIndex]}")
+                    return "Nifty: ${xAxisLabel[groupIndex]}"
+                }
+            })
             setDataSet(
                 dataSet = barChartData,
                 scrollEnabled = false,

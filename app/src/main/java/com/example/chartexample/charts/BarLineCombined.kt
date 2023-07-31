@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.example.chartexample.datamodel.BarChartCombinedData
 import com.example.chartexample.datamodel.RoundedRadiusUnit
+import com.example.chartexample.helper.BarChartIndvMarkerFormatter
+import com.example.chartexample.helper.BarLineCombinedFormatter
 import com.example.chartexample.helper.YAxisValueFormatter
 import com.example.chartexample.markers.BarChartCombinedMarker
 import com.example.chartexample.renderer.LineChartCircleCenterRenderer
@@ -44,6 +46,8 @@ class BarLineCombined @JvmOverloads constructor(
     private var leftValueFormatter: ValueFormatter = DefaultValueFormatter(1)
 
     private var rightValueFormatter: ValueFormatter? = DefaultValueFormatter(1)
+
+    private var markerValueFormatter: BarLineCombinedFormatter? = null
 
     fun setDataSet(dataSet: BarChartCombinedData, scrollEnabled: Boolean = true, headers: List<String>) {
         val modifiedDataSets = dataSet.barChartDataSet.map {
@@ -128,10 +132,14 @@ class BarLineCombined @JvmOverloads constructor(
                 }
             }
             isDragEnabled = scrollEnabled
-            marker = BarChartCombinedMarker(context = context, chartView = combinedChart, data = combinedData)
+            marker = BarChartCombinedMarker(context = context, chartView = combinedChart, data = combinedData, markerFormatter = markerValueFormatter)
             notifyDataSetChanged()
             invalidate()
         }
+    }
+
+    fun setMarkerValueData(markerFormatter: BarLineCombinedFormatter) {
+        markerValueFormatter = markerFormatter
     }
 
     fun setXValueFormatter(formattedValues: List<String>) {

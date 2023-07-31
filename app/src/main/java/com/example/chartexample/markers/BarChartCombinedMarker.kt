@@ -34,7 +34,8 @@ import java.lang.ref.WeakReference
 open class BarChartCombinedMarker constructor(
     context: Context,
     chartView: CombinedChart,
-    private val data: CombinedData
+    private val data: CombinedData,
+    private val markerFormatter: BarLineCombinedFormatter? = null
 ) :
     RelativeLayout(context), IMarker {
 
@@ -46,15 +47,9 @@ open class BarChartCombinedMarker constructor(
 
     private val margin by lazy { Margin(top = 20) }
 
-    private var markerFormatter: BarLineCombinedFormatter? = null
-
     init {
         setupLayoutResource(R.layout.combined_marker)
         setChartView(chart = chartView)
-    }
-
-    fun setMarkerValueFormatter(markerFormatter: BarLineCombinedFormatter) {
-        this.markerFormatter = markerFormatter
     }
 
     override fun getOffset(): MPPointF {
